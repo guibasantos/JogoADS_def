@@ -1,4 +1,6 @@
 # Byte-compiled / optimized / DLL files
+.ideia
+venvJogoADS_def/
 __pycache__/
 *.py[cod]
 *$py.class
