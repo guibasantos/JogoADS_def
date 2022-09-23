@@ -1,12 +1,107 @@
 # Guilherme Wilson Vieira dos Santos - Tecnólogo em Análise e Desenvolvimento de Sistemas
-
 import random
-#Tela Inicial
-print('~' * 50)
-print(f'{"~> ZOMBIE DICE <~":^50}')
-print('~' * 50)
 
-#Looping para regra de no mínimo dois jogadores
+
+def jogadores():
+    tiro = 0
+    passo = 0
+    cerebro = 0
+    cont_verde = 0
+    cont_amarelo = 0
+    cont_vermelho = 0
+    lista_dados_sorteados = []
+    tcerebros = 0
+    ttiros = 0
+    return [tiro, passo, cerebro, cont_verde, cont_amarelo, cont_vermelho, lista_dados_sorteados, tcerebros, ttiros]
+
+
+def todos_dados():
+    lista_todos_dados = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
+    return lista_todos_dados
+
+
+def tipo_dados():
+    verde = 0
+    amarelo = 0
+    vermelho = 0
+    contadores[3] = 0
+    contadores[4] = 0
+    contadores[5] = 0
+    for fs in sorteados:
+        if fs <= 6:
+            verde += 1
+            contadores[3] += 1
+        elif 7 <= fs <= 10:
+            amarelo += 1
+            contadores[4] += 1
+        else:
+            vermelho += 1
+            contadores[5] += 1
+    return [verde, amarelo, vermelho, contadores[3], contadores[4], contadores[5]]
+
+
+def tipo_face():
+    cerebro = 0
+    passo = 0
+    tiro = 0
+    for d in range(cores[0]):
+        face = random.randint(0, 5)
+        if face == 0 or 2 or 5:
+            cerebro += 1
+        elif face == 1 or 4:
+            passo += 1
+        elif face == 3:
+            tiro += 1
+    for d in range(cores[1]):
+        face = random.randint(0, 5)
+        if face == 2 or 5:
+            cerebro += 1
+        elif face == 1 or 4:
+            passo += 1
+        elif face == 0 or 3:
+            tiro += 1
+    for d in range(cores[2]):
+        face = random.randint(0, 5)
+        if face == 3:
+            cerebro += 1
+        elif face == 1 or 4:
+            passo += 1
+        elif face == 0 or 2 or 5:
+            tiro += 1
+    andou = cerebro - tiro
+    contadores[7] += andou
+    contadores[8] += tiro
+    return [cerebro, passo, tiro, andou, contadores[7], contadores[8]]
+
+
+def condicoes():
+    roda = 0
+    if acao[5] == 3:
+        print('Você perdeu a sua vez!')
+        roda += 1
+    else:
+        d = str(input('Você deseja continuar jogando? [S/N] ')).upper().strip()[0]
+        while d not in 'SsNn':
+            print('Digite somente S ou N!!!')
+            d = str(input('Você deseja continuar jogando? [S/N] ')).upper().strip()[0]
+        if d in 'N':
+            print('O seu turno acabou!')
+            roda += 1
+        else:
+            roda += 2
+    if acao[4] >= 13:
+        print('VOCÊ VENCEU O JOGO!!!')
+        roda += 3
+    elif len(dados) <= 2:
+        print('Seus dados acabaram!')
+        roda += 1
+    return [roda]
+
+
+print('~*~' * 10)
+print(f'{"~> ZOMBIE DICE <~":^30}')
+print('~*~' * 10)
+
 while True:
     try:
         n_j = int(input('Digite o número de Jogadores: '))
@@ -17,145 +112,42 @@ while True:
     except ValueError:
         print('Por favor, insira somente números!')
 
-#Armazenamento dos nomes dos jogadores
 lista_nomes = []
 for c in range(n_j):
     nome = str(input(f'Digite o nome do {c+1}º Jogador: '))
     lista_nomes.append(nome)
 
-#Definição dos treze dados
-#(1-6 Verde/7-10 Amarelo/ 11-13 Vermelho)
-lista_dados = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
-lista_verde = ["C", "P", "C", "T", "P", "C"]
-lista_amarelo = ["T", "P", "C", "T", "P", "C"]
-lista_vermelho = ["T", "P", "T", "C", "P", "T"]
-
-#Contadores
-verde = 0
-amarelo = 0
-vermelho = 0
-passo = 0
-tiro = 0
-cerebro = 0
-cerebro_total = 0
-ganhou = 0
-lista_cerebros = []
-
-for z in range(0, n_j):
-    lista_cerebros.append(0)
-
-#Turno do jogador
 while True:
     for cont in range(0, n_j):
         print(f'É a vez do jogador {lista_nomes[cont]}')
-        tiro = 0
-        passo = 0
-        cerebro = 0
-        cont_verde = 0
-        cont_amarelo = 0
-        cont_vermelho = 0
-        lista_dados_sorteados = []
-        cerebro_total = lista_cerebros[cont]
-
-        #Sorteio dos três dados e suas respectivas cores
+        contadores = jogadores()
+        dados = todos_dados()
         while True:
-            cerebro = 0
-            tiro += tiro
-            lista_dados_sorteados = (random.sample(lista_dados, 3))
-            for ns in lista_dados_sorteados:
-                if ns <= 6:
-                    verde += 1
-                    cont_verde += 1
-                elif 7 <= ns <= 10:
-                    amarelo += 1
-                    cont_amarelo += 1
-                else:
-                    vermelho += 1
-                    cont_vermelho += 1
-                for n in lista_dados:
-                    if n == ns:
-                        lista_dados.remove(n)
-            print(f'Você retirou {verde} dados VERDE')
-            print(f'Você retirou {amarelo} dados AMARELO')
-            print(f'Você retirou {vermelho} dados VERMELHO')
-
-            #Sorteio das faces de cada um dos dados
-            for d in range(verde):
-                face = random.randint(0, 5)
-                if face == 0 or 2 or 5:
-                    cerebro += 1
-                elif face == 1 or 4:
-                    passo += 1
-                else:
-                    tiro += 1
-            for d in range(amarelo):
-                face = random.randint(0, 5)
-                if face == 2 or 5:
-                    cerebro += 1
-                elif face == 1 or 4:
-                    passo += 1
-                else:
-                    tiro += 1
-            for d in range(vermelho):
-                face = random.randint(0, 5)
-                if face == 3:
-                    cerebro += 1
-                elif face == 1 or 4:
-                    passo += 1
-                else:
-                    tiro += 1
-            cerebro_total += cerebro
-            del lista_cerebros[cont]
-            lista_cerebros.insert(cont, cerebro_total)
-            print(f'{lista_nomes[cont]} você teve {cerebro} cerebros e {tiro} tiros.')
-            print(f'{lista_nomes[cont]} você já avançou {lista_cerebros[cont]} casas!!!')
-            if lista_cerebros[cont] >= 13:
-                print(f'Parabéns {lista_nomes[cont]} você venceu o jogo!')
-                ganhou = 13
-                break
-            if 5 - cont_verde <= 0:
-                print('Não há dados verdes no copo.')
+            sorteados = (random.sample(dados, 3))
+            for n in sorteados:
+                if n in sorteados:
+                    dados.remove(n)
+            cores = tipo_dados()
+            print(f'Você tirou {cores[3]} dados VERDES!')
+            print(f'Você tirou {cores[4]} dados AMARELOS!')
+            print(f'Você tirou {cores[5]} dados VERMELHOS!')
+            acao = tipo_face()
+            print(f'Você tirou {acao[0]} cérebros!')
+            print(f'Você tirou {acao[1]} passos!')
+            print(f'Você tirou {acao[2]} tiros!')
+            if acao[3] != 0:
+                print(f'Você avançou {acao[3]} casas!')
             else:
-                print(f'Sobraram {5 - cont_verde} dados verde no copo.')
-            if 4 - cont_amarelo <= 0:
-                print('Não há dados amarelos no copo.')
-            else:
-                print(f'Sobraram {4 - cont_amarelo} dados amarelo no copo.')
-            if 4 - cont_vermelho <= 0:
-                print('Não há dados vermelhos no copo.')
-            else:
-                print(f'Sobraram {4 - cont_vermelho} dados vermelho no copo.')
-
-            #Condições de termino da rodada e do jogo
-            if tiro == 3:
-                print('Você perdeu a sua vez!')
-                verde = 0
-                amarelo = 0
-                vermelho = 0
-                lista_dados = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
+                print(f'Você não avançou casas!')
+            print(f'No total você já avançou {acao[4]} casas!')
+            print(f'Você está com {acao[5]} tiros!!')
+            cond = condicoes()
+            if cond[0] == 1:
                 break
-            elif len(lista_dados) <= 1:
-                print('Os seus dados acabaram. É a vez do próximo Jogador.')
-                verde = 0
-                amarelo = 0
-                vermelho = 0
-                lista_dados = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
+            elif cond[0] == 2:
+                pass
+            elif cond[0] == 3:
                 break
-            elif tiro != 3:
-                deci = str(input('Você deseja continuar jogando? [S/N] ')).upper().strip()[0]
-                while deci not in 'SsNn':
-                    print('Digite somente S ou N!')
-                    deci = str(input('Você deseja continuar jogando? [S/N] ')).upper().strip()[0]
-                if deci in 'N':
-                    print(f'{lista_nomes[cont]} o seu turno acabou!')
-                    verde = 0
-                    amarelo = 0
-                    vermelho = 0
-                    lista_dados = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
-                    break
-                else:
-                    verde = 0
-                    amarelo = 0
-                    vermelho = 0
-    if ganhou == 13:
+    cond = condicoes()
+    if cond[0] == 3:
         break
