@@ -1,6 +1,10 @@
 # Guilherme Wilson Vieira dos Santos - Tecnólogo em Análise e Desenvolvimento de Sistemas
 import random
 
+lista_cerebros = []
+cerebro_total = 0
+ganhou = 0
+
 
 def jogadores():
     tiro = 0
@@ -46,55 +50,54 @@ def tipo_face():
     tiro = 0
     for d in range(cores[0]):
         face = random.randint(0, 5)
-        if face == 0 or 2 or 5:
+        if face == 0 == 2 == 5:
             cerebro += 1
-        elif face == 1 or 4:
+        elif face == 1 == 4:
             passo += 1
-        elif face == 3:
+        else:
             tiro += 1
     for d in range(cores[1]):
         face = random.randint(0, 5)
-        if face == 2 or 5:
+        if face == 2 == 5:
             cerebro += 1
-        elif face == 1 or 4:
+        elif face == 1 == 4:
             passo += 1
-        elif face == 0 or 3:
+        else:
             tiro += 1
     for d in range(cores[2]):
         face = random.randint(0, 5)
         if face == 3:
             cerebro += 1
-        elif face == 1 or 4:
+        elif face == 1 == 4:
             passo += 1
-        elif face == 0 or 2 or 5:
+        else:
             tiro += 1
-    andou = cerebro - tiro
-    contadores[7] += andou
+    contadores[7] += cerebro
     contadores[8] += tiro
-    return [cerebro, passo, tiro, andou, contadores[7], contadores[8]]
+    return [cerebro, passo, tiro, contadores[7], contadores[8]]
 
 
 def condicoes():
     roda = 0
-    if acao[5] == 3:
+    if lista_cerebros[cont] >= 13:
+        print(f'{lista_nomes[cont]} VOCÊ VENCEU O JOGO!!!')
+        roda = 3
+    elif len(dados) <= 2:
+        print('Seus dados acabaram!')
+        roda = 1
+    elif acao[4] == 3:
         print('Você perdeu a sua vez!')
         roda += 1
-    else:
+    elif acao[4] != 3:
         d = str(input('Você deseja continuar jogando? [S/N] ')).upper().strip()[0]
         while d not in 'SsNn':
             print('Digite somente S ou N!!!')
             d = str(input('Você deseja continuar jogando? [S/N] ')).upper().strip()[0]
         if d in 'N':
             print('O seu turno acabou!')
-            roda += 1
+            roda = 1
         else:
-            roda += 2
-    if acao[4] >= 13:
-        print('VOCÊ VENCEU O JOGO!!!')
-        roda += 3
-    elif len(dados) <= 2:
-        print('Seus dados acabaram!')
-        roda += 1
+            roda = 2
     return [roda]
 
 
@@ -117,11 +120,15 @@ for c in range(n_j):
     nome = str(input(f'Digite o nome do {c+1}º Jogador: '))
     lista_nomes.append(nome)
 
+for z in range(0, n_j):
+    lista_cerebros.append(0)
+
 while True:
     for cont in range(0, n_j):
         print(f'É a vez do jogador {lista_nomes[cont]}')
         contadores = jogadores()
         dados = todos_dados()
+        cerebro_total = lista_cerebros[cont]
         while True:
             sorteados = (random.sample(dados, 3))
             for n in sorteados:
@@ -132,22 +139,27 @@ while True:
             print(f'Você tirou {cores[4]} dados AMARELOS!')
             print(f'Você tirou {cores[5]} dados VERMELHOS!')
             acao = tipo_face()
+            cerebro_total += acao[0]
+            del lista_cerebros[cont]
+            lista_cerebros.insert(cont, cerebro_total)
             print(f'Você tirou {acao[0]} cérebros!')
             print(f'Você tirou {acao[1]} passos!')
             print(f'Você tirou {acao[2]} tiros!')
             if acao[3] != 0:
-                print(f'Você avançou {acao[3]} casas!')
+                print(f'Você avançou {acao[0]} casas!')
             else:
                 print(f'Você não avançou casas!')
-            print(f'No total você já avançou {acao[4]} casas!')
-            print(f'Você está com {acao[5]} tiros!!')
+            print(f'{lista_nomes[cont]} você já avançou {lista_cerebros[cont]} casas!')
+            print(f'{lista_nomes[cont]} você está com {acao[4]} tiros!!')
             cond = condicoes()
             if cond[0] == 1:
                 break
             elif cond[0] == 2:
-                pass
+                continue
             elif cond[0] == 3:
+                ganhou = 100
                 break
-    cond = condicoes()
-    if cond[0] == 3:
+        if ganhou == 100:
+            break
+    if ganhou == 100:
         break
