@@ -50,25 +50,28 @@ def tipo_face():
     tiro = 0
     for d in range(cores[0]):
         face = random.randint(0, 5)
-        if face == 0 == 2 == 5:
+        print(face)
+        if face == 0 or face == 2 or face == 5:
             cerebro += 1
-        elif face == 1 == 4:
+        elif face == 1 or face == 4:
             passo += 1
         else:
             tiro += 1
     for d in range(cores[1]):
         face = random.randint(0, 5)
-        if face == 2 == 5:
+        print(face)
+        if face == 2 or face == 5:
             cerebro += 1
-        elif face == 1 == 4:
+        elif face == 1 or face == 4:
             passo += 1
         else:
             tiro += 1
     for d in range(cores[2]):
         face = random.randint(0, 5)
+        print(face)
         if face == 3:
             cerebro += 1
-        elif face == 1 == 4:
+        elif face == 1 or face == 4:
             passo += 1
         else:
             tiro += 1
@@ -85,7 +88,7 @@ def condicoes():
     elif len(dados) <= 2:
         print('Seus dados acabaram!')
         roda = 1
-    elif acao[4] == 3:
+    elif acao[4] >= 3:
         print('Você perdeu a sua vez!')
         roda += 1
     elif acao[4] != 3:
